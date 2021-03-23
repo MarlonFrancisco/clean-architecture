@@ -2,15 +2,23 @@ import {
   HttpPostParams,
   HttpPostClient,
 } from "../protocols/http/http-post-client";
+import {
+  HttpResponse,
+  HttpStatusReponse,
+} from "../protocols/http/http-response";
 
-class HttpPostClientSpy implements HttpPostClient {
+class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
   url?: string;
-  body?: object;
+  body?: T;
 
-  post(params: HttpPostParams): Promise<void> {
+  response: HttpResponse<R> = {
+    statusCode: HttpStatusReponse.noContent,
+  };
+
+  post(params: HttpPostParams<T>): Promise<HttpResponse<R>> {
     this.url = params.url;
     this.body = params.body;
-    return Promise.resolve();
+    return Promise.resolve(this.response);
   }
 }
 
